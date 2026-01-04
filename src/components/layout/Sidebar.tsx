@@ -20,7 +20,7 @@ export default function Sidebar() {
       {/* Header */}
       <div className="p-6 border-b">
         <h1 className="text-xl  text-indigo-600">
-         Ar-Rayhaan Health ERP
+        NAGWALE Health ERP
         </h1>
         <p className="text-sm text-gray-500 capitalize">
           {role?.toLowerCase()} dashboard

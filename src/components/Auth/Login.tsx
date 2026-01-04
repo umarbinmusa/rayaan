@@ -17,7 +17,8 @@ export default function Login() {
       localStorage.setItem("user", JSON.stringify(user));
 
       
-      navigate("/dashboard");
+      window.location.href = "/dashboard";
+
     },
   });
 

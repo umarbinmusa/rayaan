@@ -7,7 +7,7 @@ export default function LandingPage() {
       <section className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white">
         <div className="max-w-7xl mx-auto px-6 py-24 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            Ar-Rayhaan Healthcare Management System
+           NAGWALE Healthcare Management System
           </h1>
           <p className="text-lg md:text-xl max-w-2xl mx-auto mb-8">
             Book appointments, manage consultations, buy drugs, and run your
@@ -128,7 +128,7 @@ export default function LandingPage() {
       {/* ================= FOOTER ================= */}
       <footer className="bg-gray-900 text-gray-400 py-6 text-center">
         <p>
-          © {new Date().getFullYear()} Ar-Rayhaan Health ERP. All rights reserved.
+          © {new Date().getFullYear()} NAGWALE Health ERP. All rights reserved.
         </p>
       </footer>
     </div>
