@@ -11,7 +11,7 @@ export default function Signup() {
     username: "",
     email: "",
     password: "",
-    role: "USER",
+    role: "PATIENT",
   });
 
   const [signup, { loading, error }] = useMutation(SIGNUP, {
@@ -82,8 +82,9 @@ export default function Signup() {
             value={form.role}
             onChange={handleChange}
           >
-            <option value="USER">User</option>
+            <option value="PATIENT">PATIENT</option>
             <option value="ADMIN">Admin</option>
+             <option value="CONSULTANT">CONSULTANT</option>
           </select>
 
           {error && (

@@ -13,6 +13,7 @@ import DrugPurchaseHistory from "./pages/DrugPurchaseHistory";
 import CreateConsultation from "./pages/CreateConsultation";
 import Consultations from "./pages/Consultations";
 import Appointments from "./pages/MyAppointments";
+import Consultants from "./pages/Consultants";
 import Appointmentss from "./pages/Appointmentss";
 import LandingPage from "./pages/LandingPage";
 
@@ -35,6 +36,7 @@ export default function App() {
         <Route path="/drugs" element={<Drugs />} />
         <Route path="/create-drug" element={<CreateDrug />} />
         <Route path="/drug-history" element={<DrugPurchaseHistory />} />
+        <Route path="/consultants" element={<Consultants />} />
 <Route path="/receipt/:id" element={<DrugReceipt />} />
 <Route
   path="/create-consultation"

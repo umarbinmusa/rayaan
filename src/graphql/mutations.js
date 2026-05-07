@@ -5,8 +5,8 @@ export const SIGNUP = gql`
     $username: String!
     $password: String!
     $role: String!
-    $email: String
-    $full_name: String
+    $email: String!      
+    $full_name: String!  
   ) {
     signup(
       username: $username
@@ -82,8 +82,11 @@ export const CREATE_APPOINTMENT = gql`
   mutation CreateAppointment($input: CreateAppointmentInput!) {
     createAppointment(input: $input) {
       id
-      status
       appointmentDate
+      status
+      consultant {
+        full_name
+      }
     }
   }
 `;
@@ -100,16 +103,18 @@ export const UPDATE_APPOINTMENT_STATUS = gql`
 
 
 
+
+
 export const CREATE_CONSULTATION = gql`
   mutation CreateConsultation(
-    $patientId: ID!
+    $patientName: String!          
     $symptoms: String!
     $diagnosis: String!
     $prescription: [PrescriptionInput]
     $followUpDate: String
   ) {
     createConsultation(
-      patientId: $patientId
+      patientName: $patientName      
       symptoms: $symptoms
       diagnosis: $diagnosis
       prescription: $prescription
@@ -119,6 +124,12 @@ export const CREATE_CONSULTATION = gql`
       symptoms
       diagnosis
       followUpDate
+      prescription {               
+        herbName
+        dosage
+        frequency
+        duration
+      }
       patient {
         full_name
         email
@@ -132,7 +143,6 @@ export const CREATE_CONSULTATION = gql`
     }
   }
 `;
-
 export const APPROVE_AND_ASSIGN = gql`
   mutation ApproveAndAssign($input: ApproveAndAssignAppointmentInput!) {
     approveAndAssignAppointment(input: $input) {

@@ -19,6 +19,18 @@ export const GET_DRUGS = gql`
 
 
 
+export const GET_ALL_CONSULTANTS = gql`
+  query GetAllConsultants {
+    getUsersByRole(role: "CONSULTANT") {
+      id
+      full_name
+      email
+      role
+    }
+  }
+`;
+
+
 /* Single consultation */
 export const CONSULTATION_BY_ID = gql`
   query ConsultationById($id: ID!) {

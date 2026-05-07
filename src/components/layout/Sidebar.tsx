@@ -1,175 +1,97 @@
 import { NavLink, useNavigate } from "react-router-dom";
+import { 
+  LayoutDashboard, Calendar, Stethoscope, 
+  Pill, History, PlusCircle, LogOut, Activity,
+  ClipboardList, CheckSquare, Users // Added Users icon
+} from "lucide-react";
 
 export default function Sidebar() {
   const navigate = useNavigate();
-  const role = localStorage.getItem("role"); // ADMIN | PATIENT | CONSULTANT
+  
+  const storedRole = localStorage.getItem("role");
+  const role = storedRole ? storedRole.trim().toUpperCase() : null;
 
-  const linkClass =
-    "block px-4 py-2 rounded-lg transition hover:bg-indigo-50 hover:text-indigo-600";
-
-  const activeClass =
-    "bg-indigo-100 text-indigo-700 font-medium";
+  const linkClass = "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group hover:bg-indigo-50 hover:text-indigo-600 text-gray-600";
+  const activeClass = "bg-indigo-600 text-white shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:text-white";
 
   const logout = () => {
     localStorage.clear();
     navigate("/login");
   };
 
+  const NavItem = ({ to, icon: Icon, children }) => (
+    <NavLink to={to} className={({ isActive }) => `${linkClass} ${isActive ? activeClass : ""}`}>
+      <Icon size={20} />
+      <span className="font-medium text-sm">{children}</span>
+    </NavLink>
+  );
+
   return (
-    <aside className="w-64 min-h-screen bg-white border-r flex flex-col">
-      {/* Header */}
-      <div className="p-6 border-b">
-        <h1 className="text-xl  text-indigo-600">
-        NAGWALE Health ERP
-        </h1>
-        <p className="text-sm text-gray-500 capitalize">
-          {role?.toLowerCase()} dashboard
+    <aside className="w-72 min-h-screen bg-white border-r border-gray-100 flex flex-col sticky top-0">
+      <div className="p-8">
+        <div className="flex items-center gap-2 mb-1">
+          <div className="bg-indigo-600 p-1.5 rounded-lg text-white">
+            <Activity size={24} />
+          </div>
+          <h1 className="text-xl font-bold tracking-tight text-gray-900">NAGWALE</h1>
+        </div>
+        <p className="text-[10px] font-bold uppercase tracking-widest text-indigo-500 bg-indigo-50 w-fit px-2 py-0.5 rounded mt-2">
+          {role || 'NOT LOGGED IN'} PANEL
         </p>
       </div>
 
-      {/* Navigation */}
-      <nav className="p-4 space-y-1 flex-1">
-        <NavLink
-          to="/dashboard"
-          className={({ isActive }) =>
-            `${linkClass} ${isActive ? activeClass : ""}`
-          }
-        >
-          Dashboard
-        </NavLink>
+      <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
+        <NavItem to="/dashboard" icon={LayoutDashboard}>Dashboard</NavItem>
 
-        {/* ================= PATIENT ================= */}
+        {/* --- PATIENT ROLE --- */}
         {role === "PATIENT" && (
-          <>
-            <NavLink
-              to="/appointments"
-              className={({ isActive }) =>
-                `${linkClass} ${isActive ? activeClass : ""}`
-              }
-            >
-              My Appointments
-            </NavLink>
-
-            <NavLink
-              to="/book-appointment"
-              className={({ isActive }) =>
-                `${linkClass} ${isActive ? activeClass : ""}`
-              }
-            >
-              Book Appointment
-            </NavLink>
-
-            <NavLink
-              to="/consultations"
-              className={({ isActive }) =>
-                `${linkClass} ${isActive ? activeClass : ""}`
-              }
-            >
-              My Consultations
-            </NavLink>
-
-            <NavLink
-              to="/drugs"
-              className={({ isActive }) =>
-                `${linkClass} ${isActive ? activeClass : ""}`
-              }
-            >
-              Buy Drugs
-            </NavLink>
-
-            <NavLink
-              to="/drug-history"
-              className={({ isActive }) =>
-                `${linkClass} ${isActive ? activeClass : ""}`
-              }
-            >
-              Drug Purchase History
-            </NavLink>
-          </>
+          <div className="animate-in fade-in slide-in-from-left duration-500">
+            <div className="pt-4 pb-2 px-4 text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Medical Care</div>
+            
+            {/* Added: Consultant List Link */}
+            <NavItem to="/consultants" icon={Users}>Consultants</NavItem> 
+            
+            <NavItem to="/appointments" icon={Calendar}>Appointments</NavItem>
+            <NavItem to="/book-appointment" icon={PlusCircle}>Book Now</NavItem>
+            <NavItem to="/consultations" icon={Stethoscope}>My History</NavItem>
+            
+            <div className="pt-4 pb-2 px-4 text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Pharmacy</div>
+            <NavItem to="/drugs" icon={Pill}>Pharmacy Store</NavItem>
+            <NavItem to="/drug-history" icon={History}>Orders</NavItem>
+          </div>
         )}
 
-        {/* ================= CONSULTANT ================= */}
+        {/* --- CONSULTANT ROLE --- */}
         {role === "CONSULTANT" && (
-          <>
-            <NavLink
-              to="/consultations"
-              className={({ isActive }) =>
-                `${linkClass} ${isActive ? activeClass : ""}`
-              }
-            >
-              Consultations
-            </NavLink>
-
-            <NavLink
-              to="/create-consultation"
-              className={({ isActive }) =>
-                `${linkClass} ${isActive ? activeClass : ""}`
-              }
-            >
-              Create Consultation
-            </NavLink>
-          </>
+          <div className="animate-in fade-in slide-in-from-left duration-500">
+            <div className="pt-4 pb-2 px-4 text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Clinical Tasks</div>
+            <NavItem to="/appointments" icon={CheckSquare}>Manage Schedule</NavItem>
+            <NavItem to="/create-consultation" icon={PlusCircle}>New Consultation</NavItem>
+            <NavItem to="/consultations" icon={ClipboardList}>Patient Records</NavItem>
+            
+            <div className="pt-4 pb-2 px-4 text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Inventory</div>
+            <NavItem to="/drugs" icon={Pill}>Drug Directory</NavItem>
+          </div>
         )}
 
-        {/* ================= ADMIN ================= */}
+        {/* --- ADMIN ROLE --- */}
         {role === "ADMIN" && (
-          <>
-            <NavLink
-              to="/consultations"
-              className={({ isActive }) =>
-                `${linkClass} ${isActive ? activeClass : ""}`
-              }
-            >
-              All Consultations
-            </NavLink>
-
-            <NavLink
-              to="/create-consultation"
-              className={({ isActive }) =>
-                `${linkClass} ${isActive ? activeClass : ""}`
-              }
-            >
-              Create Consultation
-            </NavLink>
-            <NavLink
-      to="/Appointments"
-      className={({ isActive }) =>
-        `${linkClass} ${isActive ? activeClass : ""}`
-      }
-    >
-      Appointments
-    </NavLink>
-
-            <NavLink
-              to="/create-drug"
-              className={({ isActive }) =>
-                `${linkClass} ${isActive ? activeClass : ""}`
-              }
-            >
-              Create Drug
-            </NavLink>
-
-            <NavLink
-              to="/drugs"
-              className={({ isActive }) =>
-                `${linkClass} ${isActive ? activeClass : ""}`
-              }
-            >
-              All Drugs
-            </NavLink>
-          </>
+          <div className="animate-in fade-in slide-in-from-left duration-500">
+            <div className="pt-4 pb-2 px-4 text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Management</div>
+            <NavItem to="/appointments" icon={Calendar}>All Appointments</NavItem>
+            <NavItem to="/consultations" icon={Stethoscope}>All Consultations</NavItem>
+            <NavItem to="/drugs" icon={Pill}>Inventory</NavItem>
+            <NavItem to="/create-drug" icon={PlusCircle}>Add Product</NavItem>
+          </div>
         )}
-        {(role === "ADMIN" || role === "CONSULTANT") && (
-  <NavLink to="/consultations">Consultations</NavLink>
-)}
       </nav>
 
-      {/* Footer */}
-      <div className="p-4 border-t">
+      <div className="p-4 border-t border-gray-50">
         <button
           onClick={logout}
-          className="w-full text-left px-4 py-2 rounded-lg text-red-600 hover:bg-red-50"
+          className="flex items-center gap-3 w-full px-4 py-3 text-sm font-medium text-red-500 rounded-xl hover:bg-red-50 transition-colors"
         >
+          <LogOut size={20} />
           Logout
         </button>
       </div>

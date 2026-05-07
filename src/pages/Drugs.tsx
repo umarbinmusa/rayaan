@@ -3,69 +3,118 @@ import { GET_DRUGS } from "../graphql/query.js";
 import { BUY_DRUG } from "../graphql/mutations.js";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { ShoppingCart, Pill, Package, Tag, Plus, Minus, Search } from "lucide-react";
 
 interface Drug {
   id: string;
   name: string;
   price: number;
   stock: number;
+  category?: string; // Optional: helps with design if your backend has it
 }
 
 export default function Drugs() {
   const { data, loading, error, refetch } = useQuery(GET_DRUGS);
-  const [buyDrug] = useMutation(BUY_DRUG);
+  const [buyDrug, { loading: buying }] = useMutation(BUY_DRUG);
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
 
-  if (loading) return <div>Loading drugs...</div>;
-  if (error) return <div>Error loading drugs: {error.message}</div>;
+  if (loading) return <div className="flex items-center justify-center min-h-[400px] text-gray-500 font-medium">Loading Pharmacy Inventory...</div>;
+  if (error) return <div className="p-6 text-red-500 bg-red-50 rounded-xl border border-red-100">Error loading drugs: {error.message}</div>;
 
   const handleBuy = async (drugId: string) => {
     const quantity = quantities[drugId] || 1;
-
     try {
       await buyDrug({
         variables: { input: { drugId, quantity } },
       });
-      toast.success("Drug purchased successfully!");
+      toast.success("Purchase confirmed! Check your order history.");
       refetch();
     } catch (err: any) {
       toast.error(err.message);
     }
   };
 
+  const updateQty = (id: string, delta: number, max: number) => {
+    const current = quantities[id] || 1;
+    const nextValue = Math.max(1, Math.min(max, current + delta));
+    setQuantities({ ...quantities, [id]: nextValue });
+  };
+
   return (
-    <div className="p-6">
-      <Toaster />
-      <h1 className="text-2xl font-bold mb-4">Available Drugs</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="max-w-7xl mx-auto space-y-8">
+      <Toaster position="top-right" />
+      
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Pharmacy Store</h1>
+          <p className="text-gray-500 mt-1">Browse and purchase available medications.</p>
+        </div>
+        
+        <div className="relative group">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-indigo-500 transition-colors" size={18} />
+          <input 
+            type="text" 
+            placeholder="Search medicine..." 
+            className="pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-xl text-sm w-full md:w-64 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all outline-none"
+          />
+        </div>
+      </div>
+
+      {/* Grid Layout */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {data.getDrugs.map((drug: Drug) => (
           <div
             key={drug.id}
-            className="border p-4 rounded shadow hover:shadow-lg transition"
+            className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-xl hover:shadow-indigo-500/5 transition-all duration-300 group flex flex-col"
           >
-            <h2 className="text-xl font-semibold">{drug.name}</h2>
-            <p className="mt-2">Price: ₦{drug.price}</p>
-            <p className="mt-1">Stock: {drug.stock}</p>
+            {/* Drug Badge/Category */}
+            <div className="flex justify-between items-start mb-4">
+              <div className="p-3 bg-indigo-50 rounded-xl text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-300">
+                <Pill size={22} />
+              </div>
+              <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider ${
+                drug.stock > 10 ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'
+              }`}>
+                {drug.stock > 0 ? `${drug.stock} in stock` : 'Out of Stock'}
+              </span>
+            </div>
 
-            <div className="mt-2 flex items-center gap-2">
-              <input
-                type="number"
-                min={1}
-                max={drug.stock}
-                value={quantities[drug.id] || 1}
-                onChange={(e) =>
-                  setQuantities({
-                    ...quantities,
-                    [drug.id]: parseInt(e.target.value),
-                  })
-                }
-                className="border p-1 w-16 rounded"
-              />
+            {/* Info */}
+            <h2 className="text-lg font-bold text-gray-900 line-clamp-1">{drug.name}</h2>
+            <div className="flex items-center gap-1.5 mt-1 text-gray-500">
+              <Tag size={14} />
+              <span className="text-sm font-medium">₦{drug.price.toLocaleString()} per unit</span>
+            </div>
+
+            <div className="mt-6 pt-6 border-t border-gray-50 space-y-4">
+              {/* Quantity Selector */}
+              <div className="flex items-center justify-between bg-gray-50 p-1.5 rounded-xl">
+                <button 
+                  onClick={() => updateQty(drug.id, -1, drug.stock)}
+                  className="p-1.5 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors text-gray-600 shadow-sm"
+                >
+                  <Minus size={14} />
+                </button>
+                <span className="font-bold text-gray-800 text-sm">
+                  {quantities[drug.id] || 1}
+                </span>
+                <button 
+                  onClick={() => updateQty(drug.id, 1, drug.stock)}
+                  className="p-1.5 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors text-gray-600 shadow-sm"
+                >
+                  <Plus size={14} />
+                </button>
+              </div>
+
+              {/* Action Button */}
               <button
+                disabled={drug.stock === 0 || buying}
                 onClick={() => handleBuy(drug.id)}
-                className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition"
+                className="w-full flex items-center justify-center gap-2 bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 active:scale-[0.98] transition-all disabled:bg-gray-200 disabled:cursor-not-allowed shadow-lg shadow-indigo-200"
               >
-                Buy
+                <ShoppingCart size={18} />
+                {buying ? 'Processing...' : 'Purchase Now'}
               </button>
             </div>
           </div>
