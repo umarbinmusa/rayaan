@@ -1,7 +1,21 @@
-import { Bell, Search, User } from "lucide-react";
+import { Bell, Search } from "lucide-react";
+import { useNavigate } from "react-router-dom"; // 1. Import useNavigate
 
 export default function Topbar() {
+  const navigate = useNavigate();
   const fullName = localStorage.getItem("full_name") || "User";
+
+  // 2. Handle the search input
+  const handleSearch = (e) => {
+    const term = e.target.value;
+    // We send the user to the drugs page with a query parameter
+    // encodeURIComponent ensures special characters don't break the URL
+    if (term.trim() !== "") {
+      navigate(`/drugs?search=${encodeURIComponent(term)}`);
+    } else {
+      navigate(`/drugs`); // Clear search if input is empty
+    }
+  };
 
   return (
     <header className="h-20 bg-white/80 backdrop-blur-md border-b border-gray-100 px-8 flex justify-between items-center sticky top-0 z-10">
@@ -11,6 +25,7 @@ export default function Topbar() {
           type="text" 
           placeholder="Search records, drugs..." 
           className="w-full pl-10 pr-4 py-2 bg-gray-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 transition-all"
+          onChange={handleSearch} // 3. Attach the handler
         />
       </div>
 
@@ -25,7 +40,7 @@ export default function Topbar() {
             <p className="text-sm font-bold text-gray-900 leading-tight">{fullName}</p>
             <p className="text-[11px] text-gray-500 font-medium">Verified Account</p>
           </div>
-          <div className="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center font-bold border-2 border-white shadow-sm">
+          <div className="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center font-bold border-2 border-white shadow-sm uppercase">
             {fullName[0]}
           </div>
         </div>

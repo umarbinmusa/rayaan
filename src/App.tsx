@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./components/Auth/Login";
 import Signup from "./components/Auth/Signup";
 import DashboardLayout from "./components/layout/DashboardLayout";
+import AdminConsultants from "./pages/AdminConsultants";
 
 import DashboardHome from "./pages/dashboard/DashboardHome";
 import Drugs from "./pages/Drugs";
@@ -13,10 +14,12 @@ import DrugPurchaseHistory from "./pages/DrugPurchaseHistory";
 import CreateConsultation from "./pages/CreateConsultation";
 import Consultations from "./pages/Consultations";
 import Appointments from "./pages/MyAppointments";
+import PatientList from "./pages/PatientList";
 import Consultants from "./pages/Consultants";
 import Appointmentss from "./pages/Appointmentss";
 import LandingPage from "./pages/LandingPage";
-
+import AttendingDesk from "./pages/AttendingDesk";
+import AdminConsultationMonitor from "./pages/AdminConsultationMonitor";
 
 export default function App() {
   const isAuth = !!localStorage.getItem("token");
@@ -31,12 +34,16 @@ export default function App() {
         element={isAuth ? <DashboardLayout /> : <Navigate to="/login" />}
       >
         <Route path="/dashboard" element={<DashboardHome />} />
+        <Route path="/consultant/attend" element={<AttendingDesk />} />
         <Route path="/appointments" element={<MyAppointments />} />
         <Route path="book-appointment" element={<BookAppointment />} />
+        <Route path="/AdminConsultationMonitor" element={<AdminConsultationMonitor/>} />
         <Route path="/drugs" element={<Drugs />} />
         <Route path="/create-drug" element={<CreateDrug />} />
         <Route path="/drug-history" element={<DrugPurchaseHistory />} />
         <Route path="/consultants" element={<Consultants />} />
+        <Route path="/patients" element={<PatientList />} />
+        <Route path="/adminconsultants" element={<AdminConsultants />} />
 <Route path="/receipt/:id" element={<DrugReceipt />} />
 <Route
   path="/create-consultation"

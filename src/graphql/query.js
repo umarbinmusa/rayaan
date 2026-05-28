@@ -16,7 +16,29 @@ export const GET_DRUGS = gql`
     }
   }
 `;
+export const GET_ALL_OUTPATIENT_RECORDS = gql`
+  query GetAllOutpatientRecords {
+    getAllOutpatientRecords {
+      id
+      patientName
+      consultantName
+      diagnosis
+      createdAt
+    }
+  }
+`;
 
+export const GET_ALL_PATIENTS = gql`
+  query GetAllPatients {
+    getUsersByRole(role: "PATIENT") {
+      id
+      full_name
+      email
+      username
+      createdAt
+    }
+  }
+`;
 
 
 export const GET_ALL_CONSULTANTS = gql`

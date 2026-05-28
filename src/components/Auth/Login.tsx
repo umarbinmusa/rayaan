@@ -10,24 +10,17 @@ export default function Login() {
 
   const [login, { loading, error }] = useMutation(LOGIN, {
    
-   onCompleted: (data) => {
-  console.log("Login Response Data:", data);
+  onCompleted: (data) => {
+  if (data?.login?.user) {
+    const { token, user } = data.login;
 
-  // Use optional chaining to safely get the user object
-  const loginData = data?.login;
-  const user = loginData?.user;
-
-  if (loginData?.token) {
-    localStorage.setItem("token", loginData.token);
-    
-    // FORCE CHECK: If role is missing from server, check if it's in the user object
-    // If all else fails, default to "PATIENT" just so the app doesn't look broken
-    const assignedRole = user?.role || "PATIENT"; 
-    
-    localStorage.setItem("role", assignedRole.toUpperCase());
+    localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(user));
 
-    // Force a full refresh to the dashboard
+    // Force the role to uppercase and trim spaces to prevent "NOT LOGGED IN"
+    const userRole = user.role ? user.role.trim().toUpperCase() : "GUEST";
+    localStorage.setItem("role", userRole);
+
     window.location.href = "/dashboard";
   }
 },

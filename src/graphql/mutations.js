@@ -92,6 +92,17 @@ export const CREATE_APPOINTMENT = gql`
 `;
 
 
+
+export const CREATE_OUTPATIENT_RECORD = gql`
+  mutation CreateOutpatientRecord($input: OutpatientInput!) {
+    createOutpatientRecord(input: $input) {
+      id
+      status
+      message
+    }
+  }
+`;
+
 export const UPDATE_APPOINTMENT_STATUS = gql`
   mutation UpdateAppointmentStatus($input: UpdateAppointmentStatusInput!) {
     updateAppointmentStatus(input: $input) {

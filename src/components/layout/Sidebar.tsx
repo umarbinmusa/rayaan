@@ -66,6 +66,7 @@ export default function Sidebar() {
           <div className="animate-in fade-in slide-in-from-left duration-500">
             <div className="pt-4 pb-2 px-4 text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Clinical Tasks</div>
             <NavItem to="/appointments" icon={CheckSquare}>Manage Schedule</NavItem>
+            <NavItem to="/consultant/attend" icon={Stethoscope}>Attend Patient</NavItem>
             <NavItem to="/create-consultation" icon={PlusCircle}>New Consultation</NavItem>
             <NavItem to="/consultations" icon={ClipboardList}>Patient Records</NavItem>
             
@@ -79,6 +80,9 @@ export default function Sidebar() {
           <div className="animate-in fade-in slide-in-from-left duration-500">
             <div className="pt-4 pb-2 px-4 text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Management</div>
             <NavItem to="/appointments" icon={Calendar}>All Appointments</NavItem>
+            <NavItem to="/admin/consultation-logs" icon={ClipboardList}>Consultation Logs</NavItem>
+            <NavItem to="/adminconsultants" icon={Stethoscope}>Consultant List</NavItem>
+            <NavItem to="/patients" icon={Users}>Patient List</NavItem>
             <NavItem to="/consultations" icon={Stethoscope}>All Consultations</NavItem>
             <NavItem to="/drugs" icon={Pill}>Inventory</NavItem>
             <NavItem to="/create-drug" icon={PlusCircle}>Add Product</NavItem>
