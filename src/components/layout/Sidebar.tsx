@@ -33,7 +33,7 @@ export default function Sidebar() {
           <div className="bg-indigo-600 p-1.5 rounded-lg text-white">
             <Activity size={24} />
           </div>
-          <h1 className="text-xl font-bold tracking-tight text-gray-900">NAGWALE</h1>
+          <h1 className="text-xl font-bold tracking-tight text-gray-900">M & C PHARMACY </h1>
         </div>
         <p className="text-[10px] font-bold uppercase tracking-widest text-indigo-500 bg-indigo-50 w-fit px-2 py-0.5 rounded mt-2">
           {role || 'NOT LOGGED IN'} PANEL
